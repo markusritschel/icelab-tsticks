@@ -4,6 +4,8 @@
 
 
 int check;
+int deviceCount = 0;
+float tempC;
 
 
 void setup() {
@@ -20,12 +22,29 @@ void loop() {
     if (check == -1) {
       continue;
     }
+
     if (pin <= 9) {
       Serial.print(0);
     }
     Serial.print(pin);
     Serial.print(":\t");
     
+    OneWire  oneWire(pin);
+    DallasTemperature sensors(&oneWire);
+    sensors.begin();  // Start up the library
+    deviceCount = sensors.getDeviceCount();
+    
+    // Send command to all the sensors for temperature conversion
+    sensors.requestTemperatures(); 
+
+    // Display temperature from each sensor
+    for (int i = 0;  i < deviceCount;  i++)
+    {
+      tempC = sensors.getTempCByIndex(i);
+      Serial.print(tempC);
+      Serial.print("\t");
+    }
+    Serial.println();
   }
   delay(2000);
 }
