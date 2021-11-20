@@ -20,9 +20,11 @@ void loop() {
     if (check == -1) {
       continue;
     }
+    if (pin <= 9) {
+      Serial.print(0);
+    }
     Serial.print(pin);
-    Serial.print(": ");
-    Serial.println();
+    Serial.print(":\t");
     
   }
   delay(2000);
