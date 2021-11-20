@@ -3,7 +3,7 @@
 #include "DS28EA00.h"
 
 
-unsigned char check;
+int check;
 
 
 void setup() {
@@ -20,6 +20,9 @@ void loop() {
     if (check == -1) {
       continue;
     }
+    Serial.print(pin);
+    Serial.print(": ");
+    Serial.println();
     
   }
   delay(2000);
@@ -40,23 +43,23 @@ int check_pin_for_device(uint8_t pin)
   OneWire ow_bus(pin);
   byte addr[8] = {0,0,0,0,0,0,0,0};
   
-  Serial.print("Checking PIN ");
-  Serial.print(pin);
-  Serial.print(": ");
+  // Serial.print("Checking PIN ");
+  // Serial.print(pin);
+  // Serial.print(": ");
 
   // check for sensors by searching OneWire bus
   if ( !ow_bus.search(addr) ) {
-    Serial.println("No sensors detected...");
+    // Serial.println("No sensors detected...");
   	return(-1);
   }
   // check if devices are DS28EA00 sensors
   else if ( addr[0] != 0x42 ) {
-  	Serial.println("Not a DS28EA00 sensor");
+  	// Serial.println("Not a DS28EA00 sensor");
   	return(-1);
   }
   
   // otherwise: reset_search and return 0
-  Serial.println("DS28EA00 device found");
+  // Serial.println("DS28EA00 device found");
   ow_bus.reset_search();
   return(0);
 }
