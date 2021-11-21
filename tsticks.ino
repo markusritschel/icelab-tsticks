@@ -75,6 +75,8 @@ void loop() {
     Serial.print(twodigits(pin));
     Serial.print(": ");
 
+    Serial.print(getISOtime());
+    Serial.print(" ");
 
     tstick_t tstick = init_tstick(pin);
 
