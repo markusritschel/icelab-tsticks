@@ -58,10 +58,13 @@ void setup() {
     Serial.println(F("# STATUS: card initialized"));
   }
 
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 
 void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
 
   // iterate over all possible pins
   for (uint8_t pin=0; pin < 15; pin++) {
@@ -92,6 +95,7 @@ void loop() {
     Serial.println();
   }
   delay(2000);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 
