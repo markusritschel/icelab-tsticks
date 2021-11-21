@@ -79,7 +79,6 @@ void loop() {
     Serial.print(": ");
 
     Serial.print(getISOtime());
-    Serial.print(" ");
 
     tstick_t tstick = init_tstick(pin);
 
@@ -89,8 +88,8 @@ void loop() {
     for(uint8_t i = 0; i < 8; i++)
     {
       tempC = tstick.sensors.getTempC(tstick.sensor_array[i].rom_code);
+      Serial.print(csv_sep);
       Serial.print(tempC);
-      Serial.print(" ");
     }
     Serial.println();
   }

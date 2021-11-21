@@ -1,5 +1,5 @@
 const String logfile = "tsticks.log";  // USER INPUT: name of the log file on the SD card
-const String csv_sep = ", ";           // separator for the csv log file
+const String csv_sep = " ";           // separator for the csv log file
 
 //Control Function Commands
 #define CHAIN            0x99
