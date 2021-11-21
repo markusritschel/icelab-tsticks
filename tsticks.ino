@@ -1,6 +1,10 @@
+#include <RTClib.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+
 #include "DS28EA00.h"
+
+RTC_DS1307 rtc;
 
 
 int check;
@@ -10,6 +14,15 @@ float tempC;
 
 void setup() {
   Serial.begin(9600);
+  // initialize rtc
+  if (!rtc.begin()) {
+    Serial.println(F("# Couldn't find RTC"));
+    while (1);
+  }
+  if (! rtc.isrunning()) {
+    Serial.println(F("# RTC is NOT running!"));
+  }
+
 }
 
 void loop() {
