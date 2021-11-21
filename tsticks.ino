@@ -63,10 +63,10 @@ void loop() {
     // Send command to all the sensors for temperature conversion
     sensors.requestTemperatures(); 
 
-    // Display temperature from each sensor
-    for (int i = 0;  i < deviceCount;  i++)
     tstick_t tstick = init_tstick(pin);
 
+    // Display temperature from each sensor
+    for (int i = 0;  i < deviceCount;  i++)
     {
       tempC = sensors.getTempCByIndex(i);
       Serial.print(tempC);
