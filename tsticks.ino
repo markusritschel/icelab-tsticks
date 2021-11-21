@@ -95,6 +95,7 @@ tstick_t init_tstick(uint8_t pin) {
   tstick.pin = pin;
   tstick.ow_bus = ow_bus;
   tstick.sensors = sensors;
+  detect_ds28ea00_devices(&tstick);   // detect sensors and populate sensor_array
 
   uint8_t numSensors = sensors.getDeviceCount();
     
@@ -136,6 +137,42 @@ int check_pin_for_device(uint8_t pin)
   return(0);
 }
 /********** END check_pin_for_device *********************************/
+
+
+/**********************************************************************
+* Function: detect_ds28ea00_devices
+* Parameters: ds28ea00_t device_array - Pointer to an array of DS28EA00 sensors
+* Returns: void 
+*
+* Description: Detect and sort DS28EA00 sensors in device_array
+**********************************************************************/
+void detect_ds28ea00_devices(tstick_t *tstick)
+{
+  int state = 0;
+  OneWire bus = tstick->ow_bus;
+  ds28ea00_t sensor_array[10];
+  
+  do
+  {
+    state = ds28ea00_sequence_discoverey(bus, sensor_array);
+    if(state == -1)
+    {
+      Serial.println("Error!");
+    }
+  }
+  while(state == -1);
+  
+  // populate sensor_array
+  for (uint8_t i=0; i < 8; i++) {
+    tstick->sensor_array[i] = sensor_array[i];
+  }
+
+  return;
+  
+}
+/********** END detect_ds28ea00_devices ******************************/
+
+
 /**********************************************************************
 * Function: ds28ea00_sequence_discoverey
 * Parameters: OneWire *ow_bus - Pointer to the OneWire bus
