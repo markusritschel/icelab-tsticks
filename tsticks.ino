@@ -1,3 +1,14 @@
+/*************************************************************************************************
+ * Sketch:  tsticks.ino
+ * Author:  M. Ritschel
+ * E-Mail:  kontakt@markusritschel.de
+ * Version: 20.11.2021
+ *
+ * This script empowers an Arduino mikrocontroller to read-out the temperature sticks (T-Sticks)
+ * that have been constructed by Leif Riemenschneider. These T-Sticks consist of an array of 
+ * DS28EA00 1-wire sensors and can be read-out in their physical order.
+ * 
+ ************************************************************************************************/
 #include <SD.h>
 #include <RTClib.h>
 #include <OneWire.h>
