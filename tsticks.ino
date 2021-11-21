@@ -29,13 +29,13 @@ RTC_DS1307 rtc;
 #endif
 
 int check;
-int deviceCount = 0;
 float tempC;
 
 
 void setup() {
   const int chipSelect = 10;
 
+  while (!Serial);
   Serial.begin(9600);
 
   DEBUG_PRINTLN(F("# Debugger ON"));
@@ -72,12 +72,9 @@ void loop() {
       continue;
     }
 
-    if (pin <= 9) {
-      Serial.print(0);
-    }
-    Serial.print(pin);
-    Serial.print(":\t");
-    
+    Serial.print(twodigits(pin));
+    Serial.print(": ");
+
 
     tstick_t tstick = init_tstick(pin);
 
@@ -88,7 +85,7 @@ void loop() {
     {
       tempC = tstick.sensors.getTempC(tstick.sensor_array[i].rom_code);
       Serial.print(tempC);
-      Serial.print("\t");
+      Serial.print(" ");
     }
     Serial.println();
   }
