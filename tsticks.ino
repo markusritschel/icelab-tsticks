@@ -32,6 +32,10 @@ int check;
 float tempC;
 
 
+/**********************************************************************
+* SETUP LOOP
+* Initializes modules (RTC, SD-Card) etc.
+**********************************************************************/
 void setup() {
   const int chipSelect = 10;
 
@@ -61,9 +65,19 @@ void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
 }
+/********** END SETUP LOOP *******************************************/
 
 
+/**********************************************************************
+  MAIN LOOP
+  Holds the main routines to read the t-sticks found on different ports
+ - Check PINs on Arduino for DS28EA00 sensors
+ - Initializes T-Stick and discovers the physical sequence on the bus
+ - Read temperatures for every sensor on the bus
+ - Write out the values to Serial Monitor and to SD card
+**********************************************************************/
 void loop() {
+  // turn on LED for reading status
   digitalWrite(LED_BUILTIN, HIGH);
 
   // iterate over all possible pins
@@ -96,6 +110,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(10000);
 }
+/********** END MAIN LOOP ********************************************/
 
 
 /**********************************************************************
@@ -120,6 +135,7 @@ tstick_t init_tstick(uint8_t pin) {
   return(tstick);
 }
 /********** END init_tstick ******************************************/
+
 
 /**********************************************************************
 * Function: check_pin_for_device
