@@ -65,6 +65,8 @@ void loop() {
 
     // Display temperature from each sensor
     for (int i = 0;  i < deviceCount;  i++)
+    tstick_t tstick = init_tstick(pin);
+
     {
       tempC = sensors.getTempCByIndex(i);
       Serial.print(tempC);
@@ -76,6 +78,29 @@ void loop() {
 }
 
 
+/**********************************************************************
+* Function: init_tstick
+* Parameters: pin
+* Returns: tstick_t
+*
+* Description: Initialize a T-Stick
+**********************************************************************/
+tstick_t init_tstick(uint8_t pin) {
+  // init one-wire bus and sensors
+  OneWire ow_bus(pin);
+  DallasTemperature sensors(&ow_bus);
+
+  // create tstick object and populate
+  tstick_t tstick;
+  tstick.pin = pin;
+  tstick.ow_bus = ow_bus;
+  tstick.sensors = sensors;
+
+  uint8_t numSensors = sensors.getDeviceCount();
+    
+  return(tstick);
+}
+/********** END init_tstick ******************************************/
 
 /**********************************************************************
 * Function: check_pin_for_device
