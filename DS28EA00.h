@@ -1,5 +1,6 @@
 //Control Function Commands
 #define CHAIN            0x99
+#define PIO_ACCESS_WRITE 0xA5
 
 
 //1-Wire ROM Function Commands
@@ -13,3 +14,19 @@
 #define CHAIN_DONE 0x96
 
 #define VALID_SEQUENCE 0xAA
+
+
+typedef struct{
+  unsigned char rom_code[8];
+  int           raw_temp;
+  unsigned char config_register;
+  float         temperature;
+  unsigned char pio_state;
+} ds28ea00_t;
+
+typedef struct{
+  uint8_t           pin;
+  OneWire           ow_bus;
+  DallasTemperature sensors;
+  ds28ea00_t        sensor_array[10];
+} tstick_t;
