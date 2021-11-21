@@ -1,3 +1,4 @@
+#include <SD.h>
 #include <RTClib.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -13,6 +14,8 @@ float tempC;
 
 
 void setup() {
+  const int chipSelect = 10;
+
   Serial.begin(9600);
   // initialize rtc
   if (!rtc.begin()) {
@@ -23,7 +26,17 @@ void setup() {
     Serial.println(F("# RTC is NOT running!"));
   }
 
+  // initialize SD card
+  // see if the card is present and can be initialized:
+  if (!SD.begin(chipSelect)) {
+    Serial.println(F("# Card failed, or not present"));
+    return;     // don't do anything more:
+  } else {
+    Serial.println(F("# STATUS: card initialized"));
+  }
+
 }
+
 
 void loop() {
 
