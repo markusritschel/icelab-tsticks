@@ -55,20 +55,15 @@ void loop() {
     Serial.print(pin);
     Serial.print(":\t");
     
-    OneWire  oneWire(pin);
-    DallasTemperature sensors(&oneWire);
-    sensors.begin();  // Start up the library
-    deviceCount = sensors.getDeviceCount();
-    
-    // Send command to all the sensors for temperature conversion
-    sensors.requestTemperatures(); 
 
     tstick_t tstick = init_tstick(pin);
 
     // Display temperature from each sensor
-    for (int i = 0;  i < deviceCount;  i++)
+    tstick.sensors.requestTemperatures();
+
+    for(uint8_t i = 0; i < 8; i++)
     {
-      tempC = sensors.getTempCByIndex(i);
+      tempC = tstick.sensors.getTempC(tstick.sensor_array[i].rom_code);
       Serial.print(tempC);
       Serial.print("\t");
     }
@@ -96,8 +91,6 @@ tstick_t init_tstick(uint8_t pin) {
   tstick.ow_bus = ow_bus;
   tstick.sensors = sensors;
   detect_ds28ea00_devices(&tstick);   // detect sensors and populate sensor_array
-
-  uint8_t numSensors = sensors.getDeviceCount();
     
   return(tstick);
 }
