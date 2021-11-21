@@ -18,6 +18,15 @@
 
 RTC_DS1307 rtc;
 
+// uncomment the following line for debugging:
+//#define DEBUG 1
+#ifdef DEBUG
+  #define DEBUG_PRINT(txt) Serial.print(txt);
+  #define DEBUG_PRINTLN(txt) Serial.println(txt);
+#else
+  #define DEBUG_PRINT(txt)
+  #define DEBUG_PRINTLN(txt)
+#endif
 
 int check;
 int deviceCount = 0;
@@ -28,6 +37,9 @@ void setup() {
   const int chipSelect = 10;
 
   Serial.begin(9600);
+
+  DEBUG_PRINTLN(F("# Debugger ON"));
+
   // initialize rtc
   if (!rtc.begin()) {
     Serial.println(F("# Couldn't find RTC"));
