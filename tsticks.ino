@@ -136,3 +136,92 @@ int check_pin_for_device(uint8_t pin)
   return(0);
 }
 /********** END check_pin_for_device *********************************/
+/**********************************************************************
+* Function: ds28ea00_sequence_discoverey
+* Parameters: OneWire *ow_bus - Pointer to the OneWire bus
+*             ds28ea00_t *device_array - Pointer to an array of type 
+*                                        ds28ea00_t
+* Returns: none
+*
+* Description: Detects devices on the bus and populates the 64-bit rom
+*              codes of the device_array
+**********************************************************************/
+int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array)
+{
+  unsigned char test_end_of_bus;
+  unsigned char data;
+  unsigned char idx = 0;
+  unsigned char idy = 0;
+  unsigned char num_ds28ea00_on_bus = 0;
+
+  // ---- Start 1st sequence ---- 
+  ow_bus.reset();
+  ow_bus.skip();  
+  ow_bus.write(CHAIN);
+  ow_bus.write(CHAIN_ON);
+  ow_bus.write(~CHAIN_ON);
+  
+  data = ow_bus.read();
+  if(data != VALID_SEQUENCE)
+  {
+    return(-1);
+  }
+  // ---- END 1st sequence ---- 
+  
+  // ---- Start 2nd sequence ---- 
+  do
+  {
+    ow_bus.reset();
+    ow_bus.write(CONDITIONAL_READ_ROM);
+
+    // retrieve 64-bit Registration Number (8 byte)
+    test_end_of_bus = 0xFF;
+    for(idy = 0; idy < 8; idy++)
+    { 
+      data = ow_bus.read();
+      test_end_of_bus &= data;
+      device_array[idx].rom_code[idy] = data;
+    }
+
+    // Test for End of bus; No response: all devices have been discovered
+    if(test_end_of_bus == 0xFF)
+    {
+      break;
+    }
+
+    // If not end of bus: a new device has been detected
+    idx++;
+    num_ds28ea00_on_bus = idx;
+    ow_bus.reset();
+    ow_bus.write(PIO_ACCESS_WRITE);   // TODO: Not MATCH_ROM ?
+    ow_bus.write(CHAIN);
+    ow_bus.write(CHAIN_DONE);
+    ow_bus.write(~CHAIN_DONE);
+  
+    data = ow_bus.read();
+    if(data != VALID_SEQUENCE)
+    {
+      return(-1);
+    }
+  }
+  while(test_end_of_bus != 0xFF);
+  // ---- END 2nd sequence ---- 
+  
+  // ---- Start last sequence ---- 
+  ow_bus.reset();
+  ow_bus.skip();
+  ow_bus.write(CHAIN);
+  ow_bus.write(CHAIN_OFF);
+  ow_bus.write(~CHAIN_OFF);
+  
+  data = ow_bus.read();
+  if(data != VALID_SEQUENCE)
+  {
+    return(-1);
+  }
+  // ---- END last sequence ---- 
+
+  return(0);
+}
+
+/********** END ds28ea00_sequence_discoverey**************************/
