@@ -18,7 +18,6 @@ jobs:
         sketch-paths: |
           - tsticks
         libraries: |
-          - name: SPI
           - name: SD
           - name: RTClib
           - name: OneWire
