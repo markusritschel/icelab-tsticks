@@ -1,34 +1,25 @@
+# https://blog.arduino.cc/2021/04/09/test-your-arduino-projects-with-github-actions/
+
 name: CI
 
 on: 
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  - push
+  - pull_request
 
 jobs:
   build: 
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        arduino-platform: ["arduino:avr"]
-        include:
-          - arduino-platform: "arduino:avr"
-            fqbn: "arduino:avr:uno"
- 
 
     steps:
     - uses: actions/checkout@v2
+    - uses: arduino/compile-sketches@v1
+      with:
+        fqbn: arduino:avr:uno
+        sketch-paths: |
+          - .
+        libraries: |
+          - name: SD
+          - name: RTClib
+          - name: OneWire
+          - name: DallasTemperature
 
-    - name: Setup Arduino CLI
-      uses: arduino/setup-arduino-cli@v1.0.0
-
-    - name: Install platform
-      run: |
-          arduino-cli core update-index
-          arduino-cli core install ${{ matrix.arduino-platform }}
- 
-    - name: Compile Sketch
-      run: arduino-cli compile --fqbn ${{ matrix.fqbn }} ./tsticks
