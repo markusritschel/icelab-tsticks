@@ -81,9 +81,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, HIGH);
 
   // iterate over all possible pins
-  for (uint8_t pin=0; pin < 15; pin++) {
-    Serial.println();
-
+  for (uint8_t pin=0; pin < 10; pin++) {
     // check if pin is occupied by a DS28EA00 device; skip if not
     check = check_pin_for_device(pin);
     if (check == -1) {
@@ -99,17 +97,19 @@ void loop() {
     DEBUG_PRINTLN(pin);
     tstick.sensors.requestTemperatures();
 
-    Serial.print(twodigits(pin));
-    Serial.print(": ");
+    write2SD(String(twodigits(pin)));
+    write2SD(": ");
 
-    Serial.print(getISOtime());
+    write2SD(getISOtime());
 
     for(uint8_t i = 0; i < 8; i++)
     {
       tempC = tstick.sensors.getTempC(tstick.sensor_array[i].rom_code);
-      Serial.print(csv_sep);
-      Serial.print(tempC);
+      write2SD(csv_sep);
+      write2SD(String(tempC));
     }
+
+    writeln2SD("");
   }
   digitalWrite(LED_BUILTIN, LOW);
   delay(10000);
