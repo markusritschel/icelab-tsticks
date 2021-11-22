@@ -16,7 +16,7 @@ jobs:
       with:
         fqbn: arduino:avr:uno
         sketch-paths: |
-          - tsticks
+          - .
         libraries: |
           - name: SD
           - name: RTClib
