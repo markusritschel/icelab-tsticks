@@ -1,7 +1,7 @@
 # T-Sticks
 
 ![main](https://github.com/markusritschel/icelab-tsticks/actions/workflows/main.yml/badge.svg)
-[![License MIT license](https://img.shields.io/github/license/icelab-markusritschel/tsticks)](./LICENSE)
+[![License MIT license](https://img.shields.io/github/license/markusritschel/icelab-tsticks)](./LICENSE)
 
 This repo contains the Arduino code which is needed to operate the temperature sticks (T-Sticks) in the ice laboratory of the Max-Planck-Insitute for Meteorology in Hamburg.
 
