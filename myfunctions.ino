@@ -49,9 +49,9 @@ void writeln2SD(String dataString) {
     if (dataFile) {
         dataFile.println(dataString);
         dataFile.close();
-        Serial.println(dataString);
 //        Serial.flush();
     };
+    Serial.println(dataString);
 }
 
 void write2SD(String dataString) {
@@ -61,7 +61,7 @@ void write2SD(String dataString) {
     if (dataFile) {
         dataFile.print(dataString);
         dataFile.close();
-        Serial.print(dataString);
 //        Serial.flush();
     };
+    Serial.print(dataString);
 }
