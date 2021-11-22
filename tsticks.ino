@@ -42,7 +42,7 @@ void setup() {
   while (!Serial);
   Serial.begin(9600);
 
-  DEBUG_PRINTLN(F("# Debugger ON"));
+  DEBUG_PRINTLN(F(" > Debugger ON"));
 
   // initialize rtc
   if (!rtc.begin()) {
@@ -59,7 +59,7 @@ void setup() {
     Serial.println(F("# Card failed, or not present"));
     return;     // don't do anything more:
   } else {
-    Serial.println(F("# STATUS: card initialized"));
+    DEBUG_PRINTLN(F(" > STATUS: card initialized"));
   }
 
   // initialize digital pin LED_BUILTIN as an output.
@@ -90,12 +90,12 @@ void loop() {
       continue;
     }
 
-    DEBUG_PRINT(F("Initializing T-Stick on pin "));
+    DEBUG_PRINT(F(" > Initializing T-Stick on pin "));
     DEBUG_PRINTLN(pin);
     tstick_t tstick = init_tstick(pin);
 
     // Display temperature from each sensor
-    DEBUG_PRINT(F("Requesting temperatures from all devices on the bus on pin "));
+    DEBUG_PRINT(F(" > Requesting temperatures from all devices on the bus on pin "));
     DEBUG_PRINTLN(pin);
     tstick.sensors.requestTemperatures();
 
@@ -156,19 +156,19 @@ int check_pin_for_device(uint8_t pin)
   
   // check for sensors by searching OneWire bus
   if ( !ow_bus.search(addr) ) {
-    DEBUG_PRINT(F("No sensors detected on pin "));
+    DEBUG_PRINT(F(" > No sensors detected on pin "));
     DEBUG_PRINTLN(pin);
   	return(-1);
   }
   // check if devices are DS28EA00 sensors
   else if ( addr[0] != 0x42 ) {
-  	DEBUG_PRINT(F("Not a DS28EA00 sensor on pin "));
+  	DEBUG_PRINT(F(" > Not a DS28EA00 sensor on pin "));
   	DEBUG_PRINTLN(pin);
   	return(-1);
   }
   
   // otherwise: reset_search and return 0
-  DEBUG_PRINT(F("DS28EA00 device found on pin "));
+  DEBUG_PRINT(F(" > DS28EA00 device found on pin "));
   DEBUG_PRINTLN(pin);
   ow_bus.reset_search();
   return(0);
@@ -191,7 +191,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
   
   do
   {
-    DEBUG_PRINTLN(F("Detecting physical sequence of sensors on bus..."));
+    DEBUG_PRINTLN(F(" > Detecting physical sequence of sensors on bus..."));
     state = ds28ea00_sequence_discoverey(bus, sensor_array);
     if(state == -1)
     {
@@ -201,7 +201,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
   while(state == -1);
 
   // populate sensor_array
-  DEBUG_PRINTLN(F("Sequence detected. Populating sensor array with addresses."));
+  DEBUG_PRINTLN(F(" > Sequence detected. Populating sensor array with addresses."));
   for (uint8_t i=0; i < 8; i++) {
     tstick->sensor_array[i] = sensor_array[i];
   }
