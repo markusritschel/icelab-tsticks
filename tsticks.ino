@@ -64,6 +64,16 @@ void setup() {
 
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
+
+  
+  // ========== write header to SD card ==========
+  writeln2SD("");
+  writeln2SD(F("# =========================================== "));
+  write2SD(F("# Initialization time: "));
+  writeln2SD(getISOtime());
+  writeln2SD(F("# <module>: <timestamp> <sensors>..."));
+  writeln2SD(F("# ------------------------------------------- "));
+  
 }
 /********** END SETUP LOOP *******************************************/
 
