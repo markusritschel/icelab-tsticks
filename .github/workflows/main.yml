@@ -13,8 +13,10 @@ jobs:
 
     strategy:
       matrix:
-        - arduino-platform: "arduino:avr"
-          fqbn: "arduino:avr:uno"
+        arduino-platform: ["arduino:avr"]
+        include:
+          - arduino-platform: "arduino:avr"
+            fqbn: "arduino:avr:uno"
  
 
     steps:
