@@ -31,5 +31,6 @@ typedef struct{
   uint8_t           pin;
   OneWire           ow_bus;
   DallasTemperature sensors;
+  String            registration_number;
   ds28ea00_t        sensor_array[10];
 } tstick_t;

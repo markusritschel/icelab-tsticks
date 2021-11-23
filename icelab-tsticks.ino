@@ -71,7 +71,7 @@ void setup() {
   writeln2SD(F("# =========================================== "));
   write2SD(F("# Initialization time: "));
   writeln2SD(getISOtime());
-  writeln2SD(F("# <module>: <timestamp> <sensors>..."));
+  writeln2SD(F("# <module>: <HEX registration number>: <timestamp> <sensors>..."));
   writeln2SD(F("# ------------------------------------------- "));
   
 }
@@ -109,6 +109,10 @@ void loop() {
 
     write2SD(String(twodigits(pin)));
     write2SD(": ");
+
+    write2SD(tstick.registration_number);
+    write2SD(": ");
+    write2SD(csv_sep);
 
     write2SD(getISOtime());
 
@@ -202,7 +206,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
   do
   {
     DEBUG_PRINTLN(F(" > Detecting physical sequence of sensors on bus..."));
-    state = ds28ea00_sequence_discoverey(bus, sensor_array);
+    state = ds28ea00_sequence_discoverey(bus, sensor_array, tstick);
     if(state == -1)
     {
       Serial.println("Error!");
@@ -232,7 +236,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
 * Description: Detects devices on the bus and populates the 64-bit rom
 *              codes of the device_array
 **********************************************************************/
-int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array)
+int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstick_t *tstick)
 {
   unsigned char test_end_of_bus;
   unsigned char data;
@@ -273,6 +277,14 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array)
     if(test_end_of_bus == 0xFF)
     {
       break;
+    }
+
+    // record the registration number (as HEX) of the first sensor as identifier for the T-Stick
+    if (idx == 0) {
+      for(idy = 1; idy < 8; idy++)
+      { 
+        tstick->registration_number += String(device_array[idx].rom_code[idy], HEX);
+      }
     }
 
     // If not end of bus: a new device has been detected
