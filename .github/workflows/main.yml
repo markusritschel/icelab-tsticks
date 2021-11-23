@@ -1,0 +1,25 @@
+# https://blog.arduino.cc/2021/04/09/test-your-arduino-projects-with-github-actions/
+
+name: CI
+
+on: 
+  - push
+  - pull_request
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: arduino/compile-sketches@v1
+      with:
+        fqbn: arduino:avr:uno
+        sketch-paths: |
+          - .
+        libraries: |
+          - name: SD
+          - name: RTClib
+          - name: OneWire
+          - name: DallasTemperature
+
