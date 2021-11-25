@@ -277,9 +277,9 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstic
       break;
     }
 
-    // record the registration number (as HEX) of the first sensor as identifier for the T-Stick
+    // record the first 24 bits of the serial number (as HEX) of the first sensor as identifier for the T-Stick
     if (idx == 0) {
-      for(idy = 1; idy < 8; idy++)
+      for(idy = 1; idy <= 3; idy++)
       { 
         tstick->registration_number += String(device_array[idx].rom_code[idy], HEX);
       }
