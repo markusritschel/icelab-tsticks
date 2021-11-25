@@ -70,7 +70,7 @@ void setup() {
   writeln2SD(F("# =========================================== "));
   write2SD(F("# Initialization time: "));
   writeln2SD(getISOtime());
-  writeln2SD(F("# <module>: <HEX registration number>: <timestamp> <sensors>..."));
+  writeln2SD(F("# <module>, <HEX ID>, <timestamp>, <sensors>..."));
   writeln2SD(F("# ------------------------------------------- "));
   
 }
@@ -107,10 +107,9 @@ void loop() {
     tstick.sensors.requestTemperatures();
 
     write2SD(String(twodigits(pin)));
-    write2SD(": ");
+    write2SD(csv_sep);
 
     write2SD(tstick.registration_number);
-    write2SD(": ");
     write2SD(csv_sep);
 
     write2SD(getISOtime());
