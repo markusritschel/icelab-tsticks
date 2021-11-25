@@ -37,7 +37,6 @@ float tempC;
 * Initializes modules (RTC, SD-Card) etc.
 **********************************************************************/
 void setup() {
-  const int chipSelect = 10;
 
   while (!Serial);
   Serial.begin(9600);
@@ -55,7 +54,7 @@ void setup() {
 
   // initialize SD card
   // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
+  if (!SD.begin(10)) {
     Serial.println(F("# Card failed, or not present"));
     return;     // don't do anything more:
   } else {
