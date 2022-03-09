@@ -12,7 +12,7 @@ git clone https://github.com/markusritschel/icelab-tsticks
 ```
 and then upload the code to your Arduino controller
 ```bash
-arduino --port /dev/ttyACM0 --upload tsticks.ino
+arduino --port /dev/ttyACM0 --upload icelab-tsticks.ino
 ```
 
 The scripts contain self-explanotary comments.
