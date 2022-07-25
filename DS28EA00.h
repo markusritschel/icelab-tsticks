@@ -1,5 +1,5 @@
 const String logfile = "tsticks.log";  // USER INPUT: name of the log file on the SD card
-const String csv_sep = " ";           // separator for the csv log file
+const String csv_sep = ", ";           // separator for the csv log file
 
 //Control Function Commands
 #define CHAIN            0x99
@@ -31,5 +31,6 @@ typedef struct{
   uint8_t           pin;
   OneWire           ow_bus;
   DallasTemperature sensors;
+  String            registration_number;
   ds28ea00_t        sensor_array[10];
 } tstick_t;
