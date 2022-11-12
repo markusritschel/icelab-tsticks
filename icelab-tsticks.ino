@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Sketch:  tsticks.ino
+ * Sketch:  icelab-tsticks.ino
  * Author:  M. Ritschel
  * E-Mail:  kontakt@markusritschel.de
  * Version: 20.11.2021
@@ -37,7 +37,6 @@ float tempC;
 * Initializes modules (RTC, SD-Card) etc.
 **********************************************************************/
 void setup() {
-  const int chipSelect = 10;
 
   while (!Serial);
   Serial.begin(9600);
@@ -52,10 +51,15 @@ void setup() {
   if (! rtc.isrunning()) {
     Serial.println(F("# RTC is NOT running!"));
   }
+  // The following line sets the RTC to the date & time this sketch was compiled
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));  // - TimeSpan(0,1,59,50));   // adjust clock via local time to UTC
+  // Serial.println(F("RTC adjusted to UTC time!"));
+  // It must be set initially at least once, and then only if the backup battery doesn't supply 
+  // the RTC anymore (e.g. if the Arduino is w/o power for longer time) or if you have to change the time/data information
 
   // initialize SD card
   // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
+  if (!SD.begin(10)) {
     Serial.println(F("# Card failed, or not present"));
     return;     // don't do anything more:
   } else {
@@ -71,7 +75,7 @@ void setup() {
   writeln2SD(F("# =========================================== "));
   write2SD(F("# Initialization time: "));
   writeln2SD(getISOtime());
-  writeln2SD(F("# <module>: <timestamp> <sensors>..."));
+  writeln2SD(F("# <module>, <HEX ID>, <timestamp>, <sensors>..."));
   writeln2SD(F("# ------------------------------------------- "));
   
 }
@@ -108,7 +112,10 @@ void loop() {
     tstick.sensors.requestTemperatures();
 
     write2SD(String(twodigits(pin)));
-    write2SD(": ");
+    write2SD(csv_sep);
+
+    write2SD(tstick.registration_number);
+    write2SD(csv_sep);
 
     write2SD(getISOtime());
 
@@ -202,7 +209,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
   do
   {
     DEBUG_PRINTLN(F(" > Detecting physical sequence of sensors on bus..."));
-    state = ds28ea00_sequence_discoverey(bus, sensor_array);
+    state = ds28ea00_sequence_discoverey(bus, sensor_array, tstick);
     if(state == -1)
     {
       Serial.println("Error!");
@@ -232,7 +239,7 @@ void detect_ds28ea00_devices(tstick_t *tstick)
 * Description: Detects devices on the bus and populates the 64-bit rom
 *              codes of the device_array
 **********************************************************************/
-int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array)
+int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstick_t *tstick)
 {
   unsigned char test_end_of_bus;
   unsigned char data;
@@ -273,6 +280,14 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array)
     if(test_end_of_bus == 0xFF)
     {
       break;
+    }
+
+    // record the first 24 bits of the serial number (as HEX) of the first sensor as identifier for the T-Stick
+    if (idx == 0) {
+      for(idy = 1; idy <= 3; idy++)
+      { 
+        tstick->registration_number += String(device_array[idx].rom_code[idy], HEX);
+      }
     }
 
     // If not end of bus: a new device has been detected
