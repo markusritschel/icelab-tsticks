@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Sketch:  tsticks.ino
+ * Sketch:  icelab-tsticks.ino
  * Author:  M. Ritschel
  * E-Mail:  kontakt@markusritschel.de
  * Version: 20.11.2021
