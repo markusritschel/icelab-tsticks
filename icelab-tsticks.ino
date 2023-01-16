@@ -178,7 +178,7 @@ int check_pin_for_device(uint8_t pin)
   	return(-1);
   }
   // check if devices are DS28EA00 sensors
-  else if ( addr[0] != 0x42 ) {
+  else if ( addr[0] != IS_DS28EA00_SENSOR ) {
   	DEBUG_PRINT(F(" > Not a DS28EA00 sensor on pin "));
   	DEBUG_PRINTLN(pin);
   	return(-1);
@@ -268,7 +268,7 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstic
     ow_bus.write(CONDITIONAL_READ_ROM);
 
     // retrieve 64-bit Registration Number (8 byte)
-    test_end_of_bus = 0xFF;
+    test_end_of_bus = END_OF_BUS;
     for(idy = 0; idy < 8; idy++)
     { 
       data = ow_bus.read();
@@ -277,7 +277,7 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstic
     }
 
     // Test for End of bus; No response: all devices have been discovered
-    if(test_end_of_bus == 0xFF)
+    if(test_end_of_bus == END_OF_BUS)
     {
       break;
     }
@@ -305,7 +305,7 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstic
       return(-1);
     }
   }
-  while(test_end_of_bus != 0xFF);
+  while(test_end_of_bus != END_OF_BUS);
   // ---- END 2nd sequence ---- 
   
   // ---- Start last sequence ---- 

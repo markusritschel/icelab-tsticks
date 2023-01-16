@@ -17,6 +17,8 @@ const String csv_sep = ", ";           // separator for the csv log file
 #define CHAIN_DONE 0x96
 
 #define VALID_SEQUENCE 0xAA
+#define END_OF_BUS 0xFF
+#define IS_DS28EA00_SENSOR 0x42
 
 
 typedef struct{
