@@ -113,12 +113,10 @@ void loop() {
 
     write2SD(String(twodigits(pin)));
     write2SD(csv_sep);
-
     write2SD(tstick.registration_number);
     write2SD(csv_sep);
-
     write2SD(getISOtime());
-
+    
     for(uint8_t i = 0; i < 8; i++)
     {
       tempC = tstick.sensors.getTempC(tstick.sensor_array[i].rom_code);
@@ -142,17 +140,15 @@ void loop() {
 * Description: Initialize a T-Stick
 **********************************************************************/
 tstick_t init_tstick(uint8_t pin) {
-  // init one-wire bus and sensors
   OneWire ow_bus(pin);
   DallasTemperature sensors(&ow_bus);
 
-  // create tstick object and populate
   tstick_t tstick;
   tstick.pin = pin;
   tstick.ow_bus = ow_bus;
   tstick.sensors = sensors;
-  detect_ds28ea00_devices(&tstick);   // detect sensors and populate sensor_array
-    
+  detect_ds28ea00_devices(&tstick);
+
   return(tstick);
 }
 /********** END init_tstick ******************************************/
@@ -167,28 +163,25 @@ tstick_t init_tstick(uint8_t pin) {
 **********************************************************************/
 int check_pin_for_device(uint8_t pin)
 {
-  // initialize OneWire bus
   OneWire ow_bus(pin);
   byte addr[8] = {0,0,0,0,0,0,0,0};
   
-  // check for sensors by searching OneWire bus
   if ( !ow_bus.search(addr) ) {
     DEBUG_PRINT(F(" > No sensors detected on pin "));
     DEBUG_PRINTLN(pin);
   	return(-1);
   }
-  // check if devices are DS28EA00 sensors
   else if ( addr[0] != IS_DS28EA00_SENSOR ) {
   	DEBUG_PRINT(F(" > Not a DS28EA00 sensor on pin "));
   	DEBUG_PRINTLN(pin);
   	return(-1);
   }
-  
-  // otherwise: reset_search and return 0
-  DEBUG_PRINT(F(" > DS28EA00 device found on pin "));
-  DEBUG_PRINTLN(pin);
-  ow_bus.reset_search();
-  return(0);
+  else {
+    DEBUG_PRINT(F(" > DS28EA00 device found on pin "));
+    DEBUG_PRINTLN(pin);
+    ow_bus.reset_search();
+    return(0);
+  }
 }
 /********** END check_pin_for_device *********************************/
 
@@ -217,7 +210,6 @@ void detect_ds28ea00_devices(tstick_t *tstick)
   }
   while(state == -1);
 
-  // populate sensor_array
   DEBUG_PRINTLN(F(" > Sequence detected. Populating sensor array with addresses."));
   for (uint8_t i=0; i < 8; i++) {
     tstick->sensor_array[i] = sensor_array[i];
@@ -267,7 +259,7 @@ int ds28ea00_sequence_discoverey(OneWire ow_bus, ds28ea00_t *device_array, tstic
     ow_bus.reset();
     ow_bus.write(CONDITIONAL_READ_ROM);
 
-    // retrieve 64-bit Registration Number (8 byte)
+    // retrieve 64-bit Registration Number (8 byte) aka ROM code
     test_end_of_bus = END_OF_BUS;
     for(idy = 0; idy < 8; idy++)
     { 

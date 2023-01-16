@@ -57,7 +57,6 @@ void writeln2SD(String dataString) {
 void write2SD(String dataString) {
     /* Helper function to write a string to both the Serial output and the SD card */
     File dataFile = SD.open(logfile, FILE_WRITE);
-    // // if the file is available, write to it:
     if (dataFile) {
         dataFile.print(dataString);
         dataFile.close();
