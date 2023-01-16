@@ -2,7 +2,7 @@
  * Sketch:  icelab-tsticks.ino
  * Author:  M. Ritschel
  * E-Mail:  kontakt@markusritschel.de
- * Version: 20.11.2021
+ * Version: 2022-01-16
  *
  * This script empowers an Arduino mikrocontroller to read-out the temperature sticks (T-Sticks)
  * that have been constructed by Leif Riemenschneider. These T-Sticks consist of an array of 
